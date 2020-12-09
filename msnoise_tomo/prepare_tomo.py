@@ -3,6 +3,7 @@ from msnoise.api import *
 
 def main():
     db = connect()
+    coord = get_stations(db)[0].coordinates
     for filter in get_filters(db):
         filterid = filter.ref
         for comp in get_components_to_compute(db):
@@ -48,7 +49,7 @@ def main():
                     s1 = get_station(db, n1, s1)
                     n2,s2 = s2.split(".")
                     s2 = get_station(db, n2, s2)
-                    d = get_interstation_distance(s1, s2)*1000
+                    d = get_interstation_distance(s1, s2, coord)*1000
                     dists.append(d)
                 tmp["dist"] = dists
                 print("*"*100)
