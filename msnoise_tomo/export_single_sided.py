@@ -9,6 +9,9 @@ def main():
     db = connect()
     components_to_compute = get_components_to_compute(db)
     maxlag = float(get_config(db, "maxlag"))
+    file_format = get_config(db, 'export_format')
+    if file_format not in ["MSEED", "SAC"]:
+        file_format = "MSEED"
     if not os.path.isdir("TOMO_SAC"):
         os.makedirs("TOMO_SAC")
     for station1, station2 in get_station_pairs(db, used=True):
@@ -30,7 +33,7 @@ def main():
                 for components in components_to_compute:
                     ref_name = pair.replace('.', '_').replace(':', '_')
                     rf = os.path.join("STACKS", "%02i" %
-                                      filterid, "REF", components, ref_name + ".MSEED")
+                                      filterid, "REF", components, ref_name + ".%s"%file_format)
                     ref = read(rf)[0]
 
                     st1 = ref.copy()
